@@ -154,6 +154,7 @@ namespace ODMissionStacker.Missions
             {
                 stackInfo = new()
                 {
+                    SourceSystem = missionData.SourceSystem,
                     IssuingFaction = missionData.IssuingFaction,
                     TargetFaction = missionData.TargetFaction
                 };

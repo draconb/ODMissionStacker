@@ -9,7 +9,7 @@
         xmlns:utils="clr-namespace:ODMissionStacker.Utils"
         mc:Ignorable="d"
         FontSize="16"
-        Title="OD MASSACRE STACK MANAGER v1.8"
+        Title="OD MASSACRE STACK MANAGER v1.8.2"
         Loaded="Window_Loaded"
         ContentRendered="Root_ContentRendered"
         Closing="Root_Closing"
@@ -177,13 +177,21 @@
                               HorizontalAlignment="Left"
                               SelectionChanged="SortingModeSelector_SelectionChanged" />
                 </StackPanel>
+				<StackPanel Orientation="Horizontal"
+							Grid.Column="3"
+							Grid.ColumnSpan="2"
+							Height="30"
+							HorizontalAlignment="Center">
+					<TextBlock Text="{Binding MissionsContainer.LiveMissions.Missions.Count, StringFormat={}Missions: {0} / 20}"
+					   VerticalAlignment="Center" />
+				</StackPanel>
 
-                <StackPanel Orientation="Horizontal"
+				<StackPanel Orientation="Horizontal"
                             Grid.Column="5"
                             Height="30"
                             HorizontalAlignment="Right">
-                    <TextBlock Text="CMDR : "
-                               VerticalAlignment="Center" />
+					<TextBlock Text="CMDR : "
+							   VerticalAlignment="Center" />
                     <ComboBox ItemsSource="{Binding Settings.Commanders}"
                               SelectedItem="{Binding Settings.CurrentCommander}"
                               VerticalAlignment="Center"
@@ -801,7 +809,8 @@
                           VirtualizingPanel.ScrollUnit="Pixel"
                           AlternationCount="{Binding Settings.AlternateRowColours, Converter={StaticResource BoolToRowAlternation}}"
                           x:Name="StackInfoGrid"
-                          Loaded="StackInfoGrid_Loaded">
+                          Loaded="StackInfoGrid_Loaded"
+						  CanUserSortColumns="True">
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}">
                             <Setter Property="BorderThickness"
@@ -850,12 +859,16 @@
                                             Width="*"
                                             HeaderStyle="{DynamicResource HeaderLeft}"
                                             Binding="{Binding IssuingFaction}" />
-                        <DataGridTextColumn Header="TARGET FACTION"
+						<DataGridTextColumn Header="SYSTEM"
+                                            MinWidth="70"
+                                            Width="SizeToCells"
+                                            Binding="{Binding SourceSystem}" />
+						<DataGridTextColumn Header="TARGET FACTION"
                                             MinWidth="130"
                                             Width="SizeToCells"
                                             HeaderStyle="{DynamicResource HeaderLeft}"
                                             Binding="{Binding TargetFaction}" />
-                        <DataGridTextColumn Header="KILLS"
+                        <DataGridTextColumn Header="TOTAL"
                                             MinWidth="45"
                                             Width="SizeToCells"
                                             Binding="{Binding KillCount, StringFormat={}{0:N0}}">
@@ -866,7 +879,29 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="DIFF"
+						<DataGridTextColumn Header="KILLS"
+                                            MinWidth="45"
+                                            Width="SizeToCells"
+                                            Binding="{Binding Kills}">
+							<DataGridTextColumn.ElementStyle>
+								<Style TargetType="{x:Type TextBlock}">
+									<Setter Property="HorizontalAlignment"
+                                            Value="Center" />
+								</Style>
+							</DataGridTextColumn.ElementStyle>
+						</DataGridTextColumn>
+						<DataGridTextColumn Header="LEFT"
+                                            MinWidth="45"
+                                            Width="SizeToCells"
+                                            Binding="{Binding Left}">
+							<DataGridTextColumn.ElementStyle>
+								<Style TargetType="{x:Type TextBlock}">
+									<Setter Property="HorizontalAlignment"
+                                            Value="Center" />
+								</Style>
+							</DataGridTextColumn.ElementStyle>
+						</DataGridTextColumn>
+						<DataGridTextColumn Header="DIFF"
                                             MinWidth="45"
                                             Width="SizeToCells"
                                             Binding="{Binding Difference}">

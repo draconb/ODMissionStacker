@@ -1,5 +1,6 @@
 ﻿using ODMissionStacker.Utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -115,6 +116,7 @@ namespace ODMissionStacker.Missions
                     {
                         stackInfo = new()
                         {
+                            SourceSystem = mission.SourceSystem,
                             IssuingFaction = mission.IssuingFaction,
                             TargetFaction = mission.TargetFaction,
                             Missions = new()
@@ -168,8 +170,9 @@ namespace ODMissionStacker.Missions
                 if (stacksToCheck.Any())
                 {
                     int max = stacksToCheck.Max(x => x.KillCount);
-                    stack.Difference = max - stack.KillCount;
-                }
+                    stack.Difference = max - stack.KillCount; 
+                    UpdateStackLeftKills(stack);
+				}
             }
 
             foreach (var targetFaction in targetFactionInfos)
@@ -252,8 +255,9 @@ namespace ODMissionStacker.Missions
 
                 if (stacksToCheck.Any())
                 {
-                    int max = stacksToCheck.Max(x => x.KillCount);
-                    stack.Difference = max - stack.KillCount;
+                    UpdateStackLeftKills(stack);
+                    int max = stacksToCheck.Max(x => x.Left);
+                    stack.Difference = max - stack.Left;
                 }
             }
 
@@ -371,6 +375,7 @@ namespace ODMissionStacker.Missions
             {
                 stackInfo = new()
                 {
+                    SourceSystem = mission.SourceSystem,
                     IssuingFaction = mission.IssuingFaction,
                     TargetFaction = mission.TargetFaction,
                     Missions = new()
@@ -440,7 +445,8 @@ namespace ODMissionStacker.Missions
             foreach (StackInfo stack in stacksToCheck)
             {
                 stack.Difference = max - stack.KillCount;
-            }
+				UpdateStackLeftKills(stack);
+			}
         }
         #endregion
 
@@ -461,13 +467,19 @@ namespace ODMissionStacker.Missions
                 }
 
                 mission.Kills++;
-            }
+				UpdateStackLeftKills(faction);
+			}
 
             UpdateFactionInfo(data.VictimFaction);
         }
 
+		private void UpdateStackLeftKills(StackInfo stack)
+		{
+			stack.Left = stack.KillCount - stack.Missions.Sum(x => x.Kills);
+			stack.Kills = stack.KillCount - stack.Left;
+		}
 
-        public void UpdateMissionsStates(Station currentStation)
+		public void UpdateMissionsStates(Station currentStation)
         {
             if (currentStation == null)
             {
